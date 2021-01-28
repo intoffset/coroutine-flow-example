@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Coroutine Flow Example</string>
+    <string name="formatted_id">ID: %s</string>
+</resources>
