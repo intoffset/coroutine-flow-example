@@ -7,42 +7,32 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 
-inline fun <reified T : Any> apiFlow(
-    crossinline call: suspend () -> Response<T>,
-): Flow<Future<T>> = flow {
-    val response = call()
-    val future: Future<T> = if (response.isSuccessful) {
-        Future.Success(data = response.body()!!)
-    } else {
-        Future.Error(HttpException(response))
-    }
-    emit(future)
-}
-    .flowOn(Dispatchers.IO)
-    .catch { it: Throwable ->
-        if (it is Exception) {
-            emit(Future.Error(error = it))
+inline fun <reified T : Any> apiFlow(crossinline call: suspend () -> Response<T>): Flow<Future<T>> =
+    flow {
+        val response = call()
+        val future: Future<T> = if (response.isSuccessful) {
+            Future.Success(value = response.body()!!)
         } else {
-            emit(Future.Error(error = Exception(it.message ?: "$it has been occurred")))
+            Future.Error(HttpException(response))
         }
-    }.onStart { emit(Future.Proceeding) }
+        emit(future)
+    }.catch { it: Throwable ->
+        emit(Future.Error(error = it))
+    }.onStart {
+        emit(Future.Proceeding)
+    }.flowOn(Dispatchers.IO)
 
-inline fun <reified T : Any?> apiNullableFlow(
-    crossinline call: suspend () -> Response<T?>,
-): Flow<Future<T?>> = flow {
-    val response = call()
-    val future = if (response.isSuccessful) {
-        Future.Success(data = response.body())
-    } else {
-        Future.Error(HttpException(response))
-    }
-    emit(future)
-}
-    .flowOn(Dispatchers.IO)
-    .catch { it: Throwable ->
-        if (it is Exception) {
-            emit(Future.Error(error = it))
+inline fun <reified T : Any?> apiNullableFlow(crossinline call: suspend () -> Response<T?>): Flow<Future<T?>> =
+    flow {
+        val response = call()
+        val future = if (response.isSuccessful) {
+            Future.Success(value = response.body())
         } else {
-            emit(Future.Error(error = Exception(it.message ?: "$it has been occurred")))
+            Future.Error(HttpException(response))
         }
-    }.onStart { emit(Future.Proceeding) }
+        emit(future)
+    }.catch { it: Throwable ->
+        emit(Future.Error(error = it))
+    }.onStart {
+        emit(Future.Proceeding)
+    }.flowOn(Dispatchers.IO)

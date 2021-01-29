@@ -4,9 +4,9 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.cuzira.coroutineflowexample.PostRepository
 import dev.cuzira.coroutineflowexample.model.Future
 import dev.cuzira.coroutineflowexample.model.Post
+import dev.cuzira.coroutineflowexample.repository.PostRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch

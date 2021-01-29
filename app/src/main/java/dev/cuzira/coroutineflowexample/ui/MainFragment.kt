@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
                 is Future.Success -> {
                     binding.progressIndicator.hide()
                     binding.listContainer.removeAllViews()
-                    binding.listContainer.adapter = PostsAdapter(it.data) {
+                    binding.listContainer.adapter = PostsAdapter(it.value) {
                         val action = directions.actionMainFragmentToDetailFragment(it.id)
                         findNavController().navigate(action)
                     }

@@ -45,8 +45,8 @@ class DetailFragment : Fragment() {
                 }
                 is Future.Success -> {
                     binding.progressIndicator.hide()
-                    binding.title.text = it.data.title
-                    binding.body.text = it.data.body
+                    binding.title.text = it.value.title
+                    binding.body.text = it.value.body
                 }
                 is Future.Error -> {
                     binding.progressIndicator.hide()

@@ -1,4 +1,4 @@
-package dev.cuzira.coroutineflowexample
+package dev.cuzira.coroutineflowexample.repository
 
 import dev.cuzira.coroutineflowexample.api.PostApi
 import dev.cuzira.coroutineflowexample.model.Comment
