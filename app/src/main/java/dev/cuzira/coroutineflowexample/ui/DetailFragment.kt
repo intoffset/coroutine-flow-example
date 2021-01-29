@@ -12,13 +12,19 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.cuzira.coroutineflowexample.R
 import dev.cuzira.coroutineflowexample.databinding.DetailFragmentBinding
 import dev.cuzira.coroutineflowexample.model.Future
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
     private val TAG = this::class.java.simpleName
 
-    private val viewModel: DetailViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var viewModelFactory: DetailViewModel.Factory
+    private val viewModel: DetailViewModel by viewModels {
+        DetailViewModel.provideFactory(viewModelFactory, args.id)
+    }
     private var _binding: DetailFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -34,9 +40,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val postId = args.id
 
-        viewModel.postId = postId
         binding.postId.text = getString(R.string.formatted_id, postId.toString())
-        viewModel.refresh()
 
         viewModel.postLiveData.observe(viewLifecycleOwner) {
             when (it) {
