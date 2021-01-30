@@ -8,31 +8,24 @@ import retrofit2.Response
 
 
 inline fun <reified T : Any> apiFlow(crossinline call: suspend () -> Response<T>): Flow<Future<T>> =
-    flow {
+    flow<Future<T>> {
         val response = call()
-        val future: Future<T> = if (response.isSuccessful) {
-            Future.Success(value = response.body()!!)
-        } else {
-            Future.Error(HttpException(response))
-        }
-        emit(future)
+        if (response.isSuccessful) emit(Future.Success(value = response.body()!!))
+        else throw HttpException(response)
     }.catch { it: Throwable ->
-        emit(Future.Error(error = it))
+        emit(Future.Error(it))
     }.onStart {
         emit(Future.Proceeding)
     }.flowOn(Dispatchers.IO)
 
 inline fun <reified T : Any?> apiNullableFlow(crossinline call: suspend () -> Response<T?>): Flow<Future<T?>> =
-    flow {
+    flow<Future<T?>> {
         val response = call()
-        val future = if (response.isSuccessful) {
-            Future.Success(value = response.body())
-        } else {
-            Future.Error(HttpException(response))
-        }
-        emit(future)
+        if (response.isSuccessful) emit(Future.Success(value = response.body()))
+        else throw HttpException(response)
     }.catch { it: Throwable ->
-        emit(Future.Error(error = it))
+        emit(Future.Error(it))
     }.onStart {
         emit(Future.Proceeding)
     }.flowOn(Dispatchers.IO)
+
