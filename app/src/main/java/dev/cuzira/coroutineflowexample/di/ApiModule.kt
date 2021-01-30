@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import dev.cuzira.coroutineflowexample.BuildConfig
 import dev.cuzira.coroutineflowexample.api.PostApi
 import okhttp3.OkHttpClient
@@ -15,11 +15,11 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
-object ApiServiceModule {
+@InstallIn(SingletonComponent::class)
+object ApiModule {
     @Singleton
     @Provides
-    fun providePostApi(retrofit: Retrofit) = retrofit.create(PostApi::class.java)
+    fun providePostApi(retrofit: Retrofit): PostApi = retrofit.create(PostApi::class.java)
 
     @Singleton
     @Provides
